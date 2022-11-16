@@ -1,0 +1,143 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xs:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://www.finos.org/> .
+
+
+:RegulatoryDocument a rdfs:Class .
+:DocIssuer rdf:type rdf:Property .
+:DocIssuer rdfs:range dc:creator  .
+:DocIssuer rdfs:domain :RegulatoryDocument .
+:ContentSubjectMattter rdf:type rdf:Property .
+:ContentSubjectMattter rdfs:range dc:description  .
+:ContentSubjectMattter rdfs:domain :RegulatoryDocument .
+:DocTitle rdf:type rdf:Property .
+:DocTitle rdfs:range dc:title  .
+:DocTitle rdfs:domain :RegulatoryDocument .
+:ContentLocation rdf:type rdf:Property .
+:ContentLocation rdfs:range xs:anyURI   .
+:ContentLocation rdfs:domain :RegulatoryDocument .
+:AppliesToInvestmentFirms rdf:type rdf:Property .
+:AppliesToInvestmentFirms rdfs:range rdf:Bag  .
+:AppliesToInvestmentFirms rdfs:domain :RegulatoryDocument .
+
+:InvestmentFirm rdf:type  rdfs:Class .
+:FirmName rdf:type rdf:Property .
+:FirmName rdf:range xs:string  .
+:FirmName rdf:domain :InvestmentFirm  .
+:FirmName rdf:domain :EURegulatedFI  .
+:FirmName rdf:domain :CreditInstitution  .
+:FirmLocation rdf:type rdf:Property .
+:FirmLocation rdf:range xs:string  .
+:FirmLocation rdf:domain :InvestmentFirm  .
+:FirmLocation rdf:domain :EURegulatedFI  .
+:FirmLocation rdf:domain :CreditInstitution  .
+
+:Regulator rdf:type rdfs:Class .
+:RegulatorName rdf:type rdf:Property .
+:RegulatorName rdf:range xs:string  .
+:RegulatorName rdf:domain :Regulator  .
+:RegulatorLocation rdf:type rdf:Property .
+:RegulatorLocation rdf:range xs:string  .
+:RegulatorLocation rdf:domain :Regulator  .
+:PublishedRegulation rdf:type rdf:Property .
+:PublishedRegulation rdf:range rdf:Bag .
+:PublishedRegulation rdf:domain :Regulator  .
+
+
+:EURegulatedFI rdf:type  rdfs:Class ;
+         rdfs:subClassOf :InvestmentFirm .
+
+:CreditInstitution rdf:type  rdfs:Class ;
+         rdfs:subClassOf :EURegulatedFI .
+
+:DeutscheBank
+    rdf:type  :InvestmentFirm;
+    :FirmName "Deutsche Bank Group";
+    :FirmLocation "Frankfurt"
+.
+
+:CreditSuisse
+    rdf:type  :InvestmentFirm;
+    :FirmName "Credit Suisse AG";
+    :FirmLocation "Zurich"
+.
+
+:DeutscheBankAG
+    rdf:type  :EURegulatedFI;
+    rdfs:subClassOf :DeutscheBank;
+    :FirmName "Deutsche Bank AG";
+    :FirmLocation "Frankfurt"
+.
+
+:DeutscheBankFillaeLondon
+    rdf:type  :CreditInstitution;
+    rdfs:subClassOf :DeutscheBankAG;
+    :FirmName "Deutsche Bank Fillae London";
+    :FirmLocation "London"
+.
+
+:DisclosureCRR
+    rdf:type  :RegulatoryDocument;
+    :DocIssuer "Prudential Regulatory Authority";
+    :ContentSubjectMattter "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.";
+    :DocTitle "Disclosure (CRR)";
+    :ContentLocation "TBC";
+    :AppliesToInvestmentFirms [
+                              a rdf:Bag;
+                              rdf:_1 :DeutscheBankFillaeLondon;
+                              rdf:_2 :CreditSuisse;
+    ]
+.
+
+:InternalLiquidityAdequacyAssessment
+    rdf:type  :RegulatoryDocument;
+    :DocIssuer "Prudential Regulatory Authority";
+    :ContentSubjectMattter "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.";
+    :DocTitle "Internal Liquidity Adequacy Assessment";
+    :ContentLocation "TBC";
+    :AppliesToInvestmentFirms [
+          a rdf:Bag;
+          rdf:_1 :DeutscheBankFillaeLondon;
+          rdf:_2 :CreditSuisse;
+      ]
+.
+
+:Interpretation
+    rdf:type  :RegulatoryDocument;
+    :DocIssuer "Prudential Regulatory Authority";
+    :ContentSubjectMattter "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.";
+    :DocTitle "Interpretation";
+    :ContentLocation "TBC";
+    :AppliesToInvestmentFirms [
+          a rdf:Bag;
+          rdf:_1 :DeutscheBankFillaeLondon;
+          rdf:_2 :CreditSuisse;
+      ]
+.
+
+:CRRFirms
+    rdf:type :RegulatoryDocument;
+    :DocIssuer "Prudential Regulatory Authority";
+    :ContentSubjectMattter "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.";
+    :DocTitle "CRR firms";
+    :ContentLocation "TBC";
+    :AppliesToInvestmentFirms [
+          a rdf:Bag;
+          rdf:_1 :DeutscheBankFillaeLondon;
+          rdf:_2 :CreditSuisse;
+      ]
+.
+:PRA
+    rdf:type :Regulator;
+    :RegulatorName "UK Prudential Regulatory Authority";
+    :RegulatorLocation "London";
+    :PublishedRegulation [
+                     a rdf:Bag;
+                        rdf:_1 :InternalLiquidityAdequacyAssessment;
+                        rdf:_2 :DisclosureCRR;
+                        rdf:_3 :Interpretation;
+     ]
+.

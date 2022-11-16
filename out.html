@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1500px;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "http://www.finos.org/PRA", "label": "http://www.finos.org/PRA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "London", "label": "London", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "n3f9c9444e68347e790fadab12a81d750b5", "label": "n3f9c9444e68347e790fadab12a81d750b5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "UK Prudential Regulatory Authority", "label": "UK Prudential Regulatory Authority", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/Regulator", "label": "http://www.finos.org/Regulator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "label": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Internal Liquidity Adequacy Assessment", "label": "Internal Liquidity Adequacy Assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "label": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/RegulatoryDocument", "label": "http://www.finos.org/RegulatoryDocument", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Prudential Regulatory Authority", "label": "Prudential Regulatory Authority", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "n3f9c9444e68347e790fadab12a81d750b2", "label": "n3f9c9444e68347e790fadab12a81d750b2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "TBC", "label": "TBC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/RegulatorName", "label": "http://www.finos.org/RegulatorName", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.w3.org/2001/XMLSchema#string", "label": "http://www.w3.org/2001/XMLSchema#string", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "label": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.w3.org/2000/01/rdf-schema#Class", "label": "http://www.w3.org/2000/01/rdf-schema#Class", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DeutscheBankFillaeLondon", "label": "http://www.finos.org/DeutscheBankFillaeLondon", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Deutsche Bank Fillae London", "label": "Deutsche Bank Fillae London", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/CreditInstitution", "label": "http://www.finos.org/CreditInstitution", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DeutscheBankAG", "label": "http://www.finos.org/DeutscheBankAG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/ContentSubjectMattter", "label": "http://www.finos.org/ContentSubjectMattter", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://purl.org/dc/terms/description", "label": "http://purl.org/dc/terms/description", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DisclosureCRR", "label": "http://www.finos.org/DisclosureCRR", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/Interpretation", "label": "http://www.finos.org/Interpretation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "label": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Disclosure (CRR)", "label": "Disclosure (CRR)", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "n3f9c9444e68347e790fadab12a81d750b1", "label": "n3f9c9444e68347e790fadab12a81d750b1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DocTitle", "label": "http://www.finos.org/DocTitle", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://purl.org/dc/terms/title", "label": "http://purl.org/dc/terms/title", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/EURegulatedFI", "label": "http://www.finos.org/EURegulatedFI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/InvestmentFirm", "label": "http://www.finos.org/InvestmentFirm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "n3f9c9444e68347e790fadab12a81d750b3", "label": "n3f9c9444e68347e790fadab12a81d750b3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Interpretation", "label": "Interpretation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DeutscheBank", "label": "http://www.finos.org/DeutscheBank", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Deutsche Bank AG", "label": "Deutsche Bank AG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Frankfurt", "label": "Frankfurt", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Deutsche Bank Group", "label": "Deutsche Bank Group", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/ContentLocation", "label": "http://www.finos.org/ContentLocation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.w3.org/2001/XMLSchema#anyURI", "label": "http://www.w3.org/2001/XMLSchema#anyURI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/PublishedRegulation", "label": "http://www.finos.org/PublishedRegulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/CreditSuisse", "label": "http://www.finos.org/CreditSuisse", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/FirmLocation", "label": "http://www.finos.org/FirmLocation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/CRRFirms", "label": "http://www.finos.org/CRRFirms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "n3f9c9444e68347e790fadab12a81d750b4", "label": "n3f9c9444e68347e790fadab12a81d750b4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "CRR firms", "label": "CRR firms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/DocIssuer", "label": "http://www.finos.org/DocIssuer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://purl.org/dc/terms/creator", "label": "http://purl.org/dc/terms/creator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Zurich", "label": "Zurich", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Credit Suisse AG", "label": "Credit Suisse AG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/FirmName", "label": "http://www.finos.org/FirmName", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/RegulatorLocation", "label": "http://www.finos.org/RegulatorLocation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "http://www.finos.org/AppliesToInvestmentFirms", "label": "http://www.finos.org/AppliesToInvestmentFirms", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "http://www.finos.org/PRA", "to": "London", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PRA", "to": "n3f9c9444e68347e790fadab12a81d750b5", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PRA", "to": "UK Prudential Regulatory Authority", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PRA", "to": "http://www.finos.org/Regulator", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "Internal Liquidity Adequacy Assessment", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "Prudential Regulatory Authority", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "n3f9c9444e68347e790fadab12a81d750b2", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "to": "TBC", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorName", "to": "http://www.finos.org/Regulator", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorName", "to": "http://www.w3.org/2001/XMLSchema#string", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorName", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Regulator", "to": "http://www.w3.org/2000/01/rdf-schema#Class", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankFillaeLondon", "to": "Deutsche Bank Fillae London", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankFillaeLondon", "to": "London", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankFillaeLondon", "to": "http://www.finos.org/CreditInstitution", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankFillaeLondon", "to": "http://www.finos.org/DeutscheBankAG", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentSubjectMattter", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentSubjectMattter", "to": "http://purl.org/dc/terms/description", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentSubjectMattter", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatoryDocument", "to": "http://www.w3.org/2000/01/rdf-schema#Class", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b5", "to": "http://www.finos.org/DisclosureCRR", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b5", "to": "http://www.finos.org/InternalLiquidityAdequacyAssessment", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b5", "to": "http://www.finos.org/Interpretation", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b5", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "TBC", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "Prudential Regulatory Authority", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "Disclosure (CRR)", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DisclosureCRR", "to": "n3f9c9444e68347e790fadab12a81d750b1", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocTitle", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocTitle", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocTitle", "to": "http://purl.org/dc/terms/title", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/EURegulatedFI", "to": "http://www.finos.org/InvestmentFirm", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/EURegulatedFI", "to": "http://www.w3.org/2000/01/rdf-schema#Class", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/InvestmentFirm", "to": "http://www.w3.org/2000/01/rdf-schema#Class", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "Prudential Regulatory Authority", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "n3f9c9444e68347e790fadab12a81d750b3", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "TBC", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "Interpretation", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/Interpretation", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankAG", "to": "http://www.finos.org/DeutscheBank", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankAG", "to": "http://www.finos.org/EURegulatedFI", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankAG", "to": "Deutsche Bank AG", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBankAG", "to": "Frankfurt", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBank", "to": "Deutsche Bank Group", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBank", "to": "Frankfurt", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DeutscheBank", "to": "http://www.finos.org/InvestmentFirm", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentLocation", "to": "http://www.w3.org/2001/XMLSchema#anyURI", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentLocation", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/ContentLocation", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PublishedRegulation", "to": "http://www.finos.org/Regulator", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PublishedRegulation", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/PublishedRegulation", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b3", "to": "http://www.finos.org/DeutscheBankFillaeLondon", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b3", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b3", "to": "http://www.finos.org/CreditSuisse", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b2", "to": "http://www.finos.org/DeutscheBankFillaeLondon", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b2", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b2", "to": "http://www.finos.org/CreditSuisse", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CreditInstitution", "to": "http://www.finos.org/EURegulatedFI", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CreditInstitution", "to": "http://www.w3.org/2000/01/rdf-schema#Class", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmLocation", "to": "http://www.finos.org/CreditInstitution", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmLocation", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmLocation", "to": "http://www.finos.org/EURegulatedFI", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmLocation", "to": "http://www.finos.org/InvestmentFirm", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmLocation", "to": "http://www.w3.org/2001/XMLSchema#string", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "CRR firms: UK banks, building societies, or investment firms subject to the EU Capital Requirements Regulation.", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "Prudential Regulatory Authority", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "n3f9c9444e68347e790fadab12a81d750b4", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "CRR firms", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CRRFirms", "to": "TBC", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocIssuer", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocIssuer", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/DocIssuer", "to": "http://purl.org/dc/terms/creator", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CreditSuisse", "to": "Zurich", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CreditSuisse", "to": "http://www.finos.org/InvestmentFirm", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/CreditSuisse", "to": "Credit Suisse AG", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmName", "to": "http://www.w3.org/2001/XMLSchema#string", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmName", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmName", "to": "http://www.finos.org/InvestmentFirm", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmName", "to": "http://www.finos.org/CreditInstitution", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/FirmName", "to": "http://www.finos.org/EURegulatedFI", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b1", "to": "http://www.finos.org/DeutscheBankFillaeLondon", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b1", "to": "http://www.finos.org/CreditSuisse", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b1", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b4", "to": "http://www.finos.org/DeutscheBankFillaeLondon", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b4", "to": "http://www.finos.org/CreditSuisse", "width": 1}, {"arrows": "to", "from": "n3f9c9444e68347e790fadab12a81d750b4", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorLocation", "to": "http://www.finos.org/Regulator", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorLocation", "to": "http://www.w3.org/2001/XMLSchema#string", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/RegulatorLocation", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/AppliesToInvestmentFirms", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/AppliesToInvestmentFirms", "to": "http://www.finos.org/RegulatoryDocument", "width": 1}, {"arrows": "to", "from": "http://www.finos.org/AppliesToInvestmentFirms", "to": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
